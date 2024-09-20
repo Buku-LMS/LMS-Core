@@ -63,6 +63,7 @@ const IssueBook = () => {
   const { id: bookId } = useParams(); 
   const [selectedMemberId, setSelectedMemberId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false); // Modal state
   const navigate = useNavigate();
 
   const parsedBookId = bookId ? parseInt(bookId, 10) : null;
@@ -80,17 +81,19 @@ const IssueBook = () => {
   });
 
   const handleIssueBook = () => {
-    const confirmIssue = window.confirm("Are you sure you want to issue this book to the selected member?");
-    if (confirmIssue) {
-      issueBook({
-        variables: { bookId: parsedBookId, memberId: parseInt(selectedMemberId, 10) },
-      });
-    }
+    setShowConfirmModal(true); // Show the confirmation modal
+  };
+
+  const confirmIssueBook = () => {
+    issueBook({
+      variables: { bookId: parsedBookId, memberId: parseInt(selectedMemberId, 10) },
+    });
+    setShowConfirmModal(false); // Close the modal after issuing the book
   };
 
   const handleCancel = () => {
     navigate('/');
-  }
+  };
 
   if (loadingBook || loadingMembers) return <p>Loading...</p>;
   if (errorBook || errorMembers) return <p>Error: {errorBook?.message || errorMembers?.message}</p>;
@@ -138,12 +141,25 @@ const IssueBook = () => {
 
       <div className="button-container">
         <button className="issue-book-btn" onClick={handleIssueBook} disabled={!selectedMemberId || loadingIssue}>
-            {loadingIssue ? 'Issuing...' : 'Issue Book'}
+          {loadingIssue ? 'Issuing...' : 'Issue Book'}
         </button>
         <button className="cancel-btn" onClick={handleCancel}>
-            Cancel
+          Cancel
         </button>
-    </div>
+      </div>
+
+      {showConfirmModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Confirm Issue</h3>
+            <p>Are you sure you want to issue this book to the selected member?</p>
+            <div className="modal-buttons">
+              <button onClick={confirmIssueBook} className="confirm-btn">Confirm</button>
+              <button onClick={() => setShowConfirmModal(false)} className="cancel-btn">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
