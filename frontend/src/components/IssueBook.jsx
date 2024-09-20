@@ -46,6 +46,19 @@ const GET_BOOK_DETAILS = gql`
   }
 `;
 
+const GET_ALL_BOOKS = gql`
+  query GetAllBooks {
+    allBooks {
+      id
+      title
+      author
+      publicationYear
+      stock
+      rentFee
+    }
+  }
+`;
+
 const IssueBook = () => {
   const { id: bookId } = useParams(); 
   const [selectedMemberId, setSelectedMemberId] = useState('');
@@ -63,6 +76,7 @@ const IssueBook = () => {
 
   const [issueBook, { loading: loadingIssue }] = useMutation(ISSUE_BOOK, {
     onCompleted: () => navigate('/'), 
+    refetchQueries: [{ query: GET_ALL_BOOKS }]
   });
 
   const handleIssueBook = () => {
