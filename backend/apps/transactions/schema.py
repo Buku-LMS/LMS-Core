@@ -14,6 +14,11 @@ class Query:
     def all_transactions(self) -> list[TransactionType]:
         return Transaction.objects.all()
 
+    @strawberry.field
+    def member_transactions(self, member_id: int) -> list[TransactionType]:
+        member = Member.objects.get(id=member_id)
+        return Transaction.objects.filter(member=member)
+
 
 @strawberry.type
 class Mutation:
