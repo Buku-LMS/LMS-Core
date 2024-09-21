@@ -60,28 +60,38 @@ const GET_ALL_BOOKS = gql`
 `;
 
 const IssueBook = () => {
-  const { id: bookId } = useParams(); 
+  const { id: bookId } = useParams();
   const [selectedMemberId, setSelectedMemberId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [showConfirmModal, setShowConfirmModal] = useState(false); // Modal state
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [issueSuccess, setIssueSuccess] = useState(null); // State to track issue result
   const navigate = useNavigate();
 
   const parsedBookId = bookId ? parseInt(bookId, 10) : null;
 
   const { loading: loadingBook, error: errorBook, data: bookData } = useQuery(GET_BOOK_DETAILS, {
     variables: { bookId: parsedBookId },
-    skip: !parsedBookId, 
+    skip: !parsedBookId,
   });
 
   const { loading: loadingMembers, error: errorMembers, data: dataMembers } = useQuery(GET_ALL_MEMBERS);
 
   const [issueBook, { loading: loadingIssue }] = useMutation(ISSUE_BOOK, {
-    onCompleted: () => navigate('/'), 
+    onCompleted: (data) => {
+      if (data.issueBook.book.stock > 0) {
+        setIssueSuccess(true); // Successful issue
+      } else {
+        setIssueSuccess(false); // Book out of stock
+      }
+    },
+    onError: () => {
+      setIssueSuccess(false); // Handle error case
+    },
     refetchQueries: [{ query: GET_ALL_BOOKS }]
   });
 
   const handleIssueBook = () => {
-    setShowConfirmModal(true); // Show the confirmation modal
+    setShowConfirmModal(true);
   };
 
   const confirmIssueBook = () => {
@@ -114,7 +124,7 @@ const IssueBook = () => {
           <p><strong>ISBN:</strong> {bookData.getBook.isbn}</p>
           <p><strong>Publication Year:</strong> {bookData.getBook.publicationYear}</p>
           <p><strong>Stock:</strong> {bookData.getBook.stock}</p>
-          <p><strong>Rent Fee:</strong> KES{bookData.getBook.rentFee.toFixed(2)}</p>
+          <p><strong>Rent Fee:</strong> KES {bookData.getBook.rentFee.toFixed(2)}</p>
         </div>
       )}
 
@@ -157,6 +167,19 @@ const IssueBook = () => {
               <button onClick={confirmIssueBook} className="confirm-btn">Confirm</button>
               <button onClick={() => setShowConfirmModal(false)} className="cancel-btn">Cancel</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {issueSuccess !== null && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>{issueSuccess ? 'Book Issued Successfully' : 'Issue Failed'}</h3>
+            <p>{issueSuccess ? 'The book has been successfully issued.' : 'The book is out of stock.'}</p>
+            <button onClick={() => {
+              setIssueSuccess(null); // Reset state
+              navigate('/'); // Navigate back or close modal
+            }} className="confirm-btn">OK</button>
           </div>
         </div>
       )}
