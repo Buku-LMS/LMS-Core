@@ -224,6 +224,10 @@ const Home = () => {
     }
   };
 
+  const handleBookIssue = (id) => {
+    navigate(`/book-transactions/${id}`);
+  };
+
   const { loading: loadingBookDetails, error: errorBookDetails, data: dataBook } = useQuery(GET_BOOK_DETAILS, {
     variables: { bookId: parseInt(selectedItemId) },
     skip: !(isDetailsModalOpen && itemType === 'book'),
@@ -334,11 +338,10 @@ const Home = () => {
                       <td>{member.phoneNumber}</td>
                       <td>{member.balance}</td>
                       <td>
-                      {/* <button onClick={() => handleRowClick(member.id, 'member')}>View Issues</button> */}
-                      <FontAwesomeIcon 
+                        <FontAwesomeIcon 
                           icon={faBook} 
                           className="issue-book-icon" 
-                          onClick={() => handleRowClick(member.id, 'member')} 
+                          onClick={() => handleBookIssue(member.id, 'member')} 
                         />
                       </td>
                     </tr>
