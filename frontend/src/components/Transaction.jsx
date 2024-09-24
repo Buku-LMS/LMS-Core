@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 
-
 const ISSUED_BOOKS = gql`
   query GetIssuedBooks($memberId: Int!) {
     issuedBooks(memberId: $memberId) {
@@ -47,7 +46,7 @@ const RETURN_BOOK_MUTATION = gql`
 
 const Transaction = () => {
   const { memberId } = useParams();
-  const { loading, error, data } = useQuery(ISSUED_BOOKS, {
+  const { loading, error, data, refetch } = useQuery(ISSUED_BOOKS, {
     variables: { memberId: parseInt(memberId) },
   });
 
@@ -56,6 +55,7 @@ const Transaction = () => {
   const [returnBook] = useMutation(RETURN_BOOK_MUTATION, {
     onCompleted: () => {
       setShowModal(false);
+      refetch(); // Refetch the issued books after a successful return
     },
     onError: (error) => {
       console.error("Error returning book:", error);
@@ -72,7 +72,6 @@ const Transaction = () => {
       returnBook({ variables: { transactionId: parseInt(selectedTransaction.id, 10) } });
     }
   };
-  
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
