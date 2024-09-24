@@ -57,7 +57,7 @@ const RETURN_BOOK_MUTATION = gql`
   }
 `;
 
-const Transaction = () => {
+const ReturnBook = () => {
   const { memberId } = useParams();
   const { loading: loadingBooks, error: errorBooks, data: dataBooks, refetch: refetchBooks } = useQuery(ISSUED_BOOKS, {
     variables: { memberId: parseInt(memberId) },
@@ -146,4 +146,4 @@ const Transaction = () => {
   );
 };
 
-export default Transaction;
+export default ReturnBook;
