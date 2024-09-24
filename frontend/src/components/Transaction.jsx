@@ -87,7 +87,6 @@ const Transaction = () => {
             <th>Author</th>
             <th>Publication Year</th>
             <th>Issue Date</th>
-            <th>Fee (KES)</th>
             <th>Return</th>
           </tr>
         </thead>
@@ -98,7 +97,6 @@ const Transaction = () => {
               <td>{transaction.book.author}</td>
               <td>{transaction.book.publicationYear}</td>
               <td>{new Date(transaction.issueDate).toLocaleDateString()}</td>
-              <td>{transaction.fee}</td>
               <td>
                 <FontAwesomeIcon 
                   icon={faExchangeAlt} 
