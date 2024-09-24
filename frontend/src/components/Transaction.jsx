@@ -22,6 +22,19 @@ const ISSUED_BOOKS = gql`
   }
 `;
 
+const GET_MEMBER_DETAILS = gql`
+  query GetMember($memberId: Int!) {
+    getMember(memberId: $memberId) {
+      id
+      firstName
+      lastName
+      email
+      phoneNumber
+      balance
+    }
+  }
+`;
+
 const RETURN_BOOK_MUTATION = gql`
   mutation ReturnBook($transactionId: Int!) {
     returnBook(transactionId: $transactionId) {
@@ -46,7 +59,11 @@ const RETURN_BOOK_MUTATION = gql`
 
 const Transaction = () => {
   const { memberId } = useParams();
-  const { loading, error, data, refetch } = useQuery(ISSUED_BOOKS, {
+  const { loading: loadingBooks, error: errorBooks, data: dataBooks, refetch: refetchBooks } = useQuery(ISSUED_BOOKS, {
+    variables: { memberId: parseInt(memberId) },
+  });
+
+  const { loading: loadingMember, error: errorMember, data: dataMember, refetch: refetchMember } = useQuery(GET_MEMBER_DETAILS, {
     variables: { memberId: parseInt(memberId) },
   });
 
@@ -55,7 +72,8 @@ const Transaction = () => {
   const [returnBook] = useMutation(RETURN_BOOK_MUTATION, {
     onCompleted: () => {
       setShowModal(false);
-      refetch();
+      refetchBooks();
+      refetchMember();
     },
     onError: (error) => {
       console.error("Error returning book:", error);
@@ -63,8 +81,9 @@ const Transaction = () => {
   });
 
   useEffect(() => {
-    refetch();
-  }, [memberId, refetch]);
+    refetchBooks();
+    refetchMember();
+  }, [memberId, refetchBooks, refetchMember]);
 
   const handleReturnClick = (transaction) => {
     setSelectedTransaction(transaction);
@@ -77,12 +96,13 @@ const Transaction = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (loadingBooks || loadingMember) return <p>Loading...</p>;
+  if (errorBooks || errorMember) return <p>Error: {errorBooks?.message || errorMember?.message}</p>;
 
   return (
     <div className="transaction-page">
       <h2>Books Issued to Member</h2>
+      <h3>Member Balance: KES {dataMember.getMember.balance.toFixed(2)}</h3>
       <table>
         <thead>
           <tr>
@@ -94,7 +114,7 @@ const Transaction = () => {
           </tr>
         </thead>
         <tbody>
-          {data.issuedBooks.map((transaction) => (
+          {dataBooks.issuedBooks.map((transaction) => (
             <tr key={transaction.id}>
               <td>{transaction.book.title}</td>
               <td>{transaction.book.author}</td>
