@@ -145,6 +145,7 @@ const Home = () => {
     refetchQueries: [{ query: GET_ALL_BOOKS }],
     onError: (error) => {
       console.error("Error adding book:", error);
+      alert("Failed to add book. Please try again."); // Display error
     },
   });
 
@@ -156,6 +157,7 @@ const Home = () => {
     refetchQueries: [{ query: GET_ALL_MEMBERS }],
     onError: (error) => {
       console.error("Error registering member:", error);
+      alert("Failed to register member. Please try again."); // Display error
     },
   });
 
@@ -189,7 +191,7 @@ const Home = () => {
         },
       });
     } else {
-      console.log("Please fill all required fields.");
+      alert("Please fill all required fields."); // Alert user
     }
   };
 
@@ -205,7 +207,7 @@ const Home = () => {
         },
       });
     } else {
-      console.log("Please fill all required fields.");
+      alert("Please fill all required fields."); // Alert user
     }
   };
 
@@ -222,7 +224,6 @@ const Home = () => {
     variables: { memberId: parseInt(selectedItemId) },
     skip: !(isDetailsModalOpen && itemType === 'member'),
   });
-
 
   if (loadingBooks) return <p>Loading Books...</p>;
   if (errorBooks) return <p>Error: {errorBooks.message}</p>;
@@ -322,7 +323,7 @@ const Home = () => {
                         <FontAwesomeIcon 
                           icon={faBook} 
                           className="issue-book-icon" 
-                          onClick={() => handleBookIssue(member.id, 'member')} 
+                          onClick={() => handleBookIssue(member.id)} 
                         />
                       </td>
                     </tr>
