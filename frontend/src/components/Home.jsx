@@ -85,21 +85,6 @@ const GET_MEMBER_DETAILS = gql`
   }
 `;
 
-const MEMBER_TRANSACTIONS = gql`
-  query MemberTransactions($memberId: Int!) {
-    memberTransactions(memberId: $memberId) {
-      fee
-      book {
-        title
-        publicationYear
-        isbn
-        author
-      }
-      issueDate
-    }
-  }
-`;
-
 const Home = () => {
   const [activeSection, setActiveSection] = useState('books');
   const { loading: loadingBooks, error: errorBooks, data: dataBooks } = useQuery(GET_ALL_BOOKS);
@@ -238,10 +223,6 @@ const Home = () => {
     skip: !(isDetailsModalOpen && itemType === 'member'),
   });
 
-  const { loading: loadingTransactions, error: errorTransactions, data: dataTransactions } = useQuery(MEMBER_TRANSACTIONS, {
-    variables: { memberId: parseInt(selectedItemId) },
-    skip: !(isDetailsModalOpen && itemType === 'member'),
-  });
 
   if (loadingBooks) return <p>Loading Books...</p>;
   if (errorBooks) return <p>Error: {errorBooks.message}</p>;
@@ -498,25 +479,6 @@ const Home = () => {
                     <p><strong>Email:</strong> {dataMember.getMember.email}</p>
                     <p><strong>Phone Number:</strong> {dataMember.getMember.phoneNumber}</p>
                     <p><strong>Balance:</strong> KES {dataMember.getMember.balance}</p>
-                    {/* Display Book Issues */}
-                    {loadingTransactions ? (
-                      <p>Loading Transactions...</p>
-                    ) : errorTransactions ? (
-                      <p>Error: {errorTransactions.message}</p>
-                    ) : (
-                      <div>
-                        <h3>Book Issues</h3>
-                        <ul>
-                          {dataTransactions.memberTransactions.map((transaction, index) => (
-                            <li key={index}>
-                              <strong>Title:</strong> {transaction.book.title} <br />
-                              <strong>Issue Date:</strong> {new Date(transaction.issueDate).toLocaleDateString()} <br />
-                              <strong>Fee:</strong> KES {transaction.fee}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
                   </div>
                 )}
               </>
