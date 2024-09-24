@@ -2,7 +2,7 @@ import { gql, useQuery, useMutation } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const ISSUED_BOOKS = gql`
   query GetIssuedBooks($memberId: Int!) {
@@ -61,6 +61,10 @@ const Transaction = () => {
       console.error("Error returning book:", error);
     }
   });
+
+  useEffect(() => {
+    refetch();
+  }, [memberId, refetch]);
 
   const handleReturnClick = (transaction) => {
     setSelectedTransaction(transaction);
