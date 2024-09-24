@@ -1,7 +1,7 @@
 import strawberry
 from datetime import datetime
 from django.utils import timezone
-from .models import Transaction
+from .models import Transaction, Status
 from .types import TransactionType
 from apps.members.models import Member
 from apps.books.models import Book
@@ -19,6 +19,11 @@ class Query:
         member = Member.objects.get(id=member_id)
         return Transaction.objects.filter(member=member)
 
+    @strawberry.field
+    def issued_books(self, member_id: int) -> list[TransactionType]:
+        member = Member.objects.get(id=member_id)
+        return Transaction.objects.filter(member=member, status=Status.ISSUED)
+
 
 @strawberry.type
 class Mutation:
@@ -31,9 +36,7 @@ class Mutation:
             raise Exception("Book is out of stock.")
 
         transaction = Transaction.objects.create(
-            member=member,
-            book=book,
-            fee=book.rent_fee,
+            member=member, book=book, fee=book.rent_fee, status=Status.ISSUED
         )
 
         book.stock -= 1
@@ -49,6 +52,7 @@ class Mutation:
             raise Exception("This book has already been returned.")
 
         transaction.return_date = timezone.now()
+        transaction.status = Status.RETURNED
 
         member = transaction.member
         if member.balance < -500:

@@ -15,3 +15,4 @@ class TransactionType:
     issue_date: date
     return_date: Optional[date]
     fee: float
+    status: str
