@@ -15,7 +15,7 @@ class Query:
         return Transaction.objects.all()
 
     @strawberry.field
-    def member_transactions(self, member_id: int) -> list[TransactionType]:
+    def book_history(self, member_id: int) -> list[TransactionType]:
         member = Member.objects.get(id=member_id)
         return Transaction.objects.filter(member=member)
 
