@@ -18,6 +18,7 @@ const ISSUED_BOOKS = gql`
         author
         publicationYear
       }
+      fee
     }
   }
 `;
@@ -137,6 +138,7 @@ const ReturnBook = () => {
           <div className="modal-content">
             <h3>Return Book</h3>
             <p>Are you sure you want to return the book: <strong>{selectedTransaction?.book.title}</strong>?</p>
+            <p>{selectedTransaction?.member.firstName} {selectedTransaction?.member.lastName} will be charged KES {selectedTransaction?.fee.toFixed(2)}</p>
             <button onClick={handleReturnBook}>Confirm Return</button>
             <button onClick={() => setShowModal(false)}>Cancel</button>
           </div>
