@@ -55,7 +55,7 @@ const Transaction = () => {
   const [returnBook] = useMutation(RETURN_BOOK_MUTATION, {
     onCompleted: () => {
       setShowModal(false);
-      refetch(); // Refetch the issued books after a successful return
+      refetch();
     },
     onError: (error) => {
       console.error("Error returning book:", error);
