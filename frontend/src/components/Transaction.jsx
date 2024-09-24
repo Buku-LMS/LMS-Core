@@ -4,18 +4,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 
-const GET_MEMBER_BOOKS = gql`
-  query GetMemberBooks($memberId: Int!) {
-    memberTransactions(memberId: $memberId) {
-      fee
+
+const ISSUED_BOOKS = gql`
+  query GetIssuedBooks($memberId: Int!) {
+    issuedBooks(memberId: $memberId) {
+      issueDate
       id
+      member {
+        firstName
+        lastName
+      }
       book {
         title
-        publicationYear
-        isbn
         author
+        publicationYear
       }
-      issueDate
     }
   }
 `;
@@ -44,7 +47,7 @@ const RETURN_BOOK_MUTATION = gql`
 
 const Transaction = () => {
   const { memberId } = useParams();
-  const { loading, error, data } = useQuery(GET_MEMBER_BOOKS, {
+  const { loading, error, data } = useQuery(ISSUED_BOOKS, {
     variables: { memberId: parseInt(memberId) },
   });
 
@@ -89,7 +92,7 @@ const Transaction = () => {
           </tr>
         </thead>
         <tbody>
-          {data.memberTransactions.map((transaction) => (
+          {data.issuedBooks.map((transaction) => (
             <tr key={transaction.id}>
               <td>{transaction.book.title}</td>
               <td>{transaction.book.author}</td>
