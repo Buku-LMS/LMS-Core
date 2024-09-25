@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
+import { useTabs, TabPanel } from "react-headless-tabs";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faBook, faInfoCircle } from '@fortawesome/free-solid-svg-icons'; 
 import { useNavigate } from 'react-router-dom';
@@ -86,7 +87,7 @@ const GET_MEMBER_DETAILS = gql`
 `;
 
 const Home = () => {
-  const [activeSection, setActiveSection] = useState('books');
+  const [selectedTab, setSelectedTab] = useTabs(["Books", "Members"], "Books");
   const { loading: loadingBooks, error: errorBooks, data: dataBooks } = useQuery(GET_ALL_BOOKS);
   const { loading: loadingMembers, error: errorMembers, data: dataMembers } = useQuery(GET_ALL_MEMBERS);
   
@@ -233,27 +234,27 @@ const Home = () => {
 
   return (
     <div className="app">
-      <nav className="tabs-container">
-        <div 
-          onClick={() => setActiveSection('books')} 
-          className={`tab-link ${activeSection === 'books' ? 'active' : ''}`}
+      <div className="tab-list">
+        <button
+          onClick={() => setSelectedTab("Books")}
+          className={selectedTab === "Books" ? "active-tab" : "inactive-tab"}
         >
           Books
-        </div>
-        <div 
-          onClick={() => setActiveSection('members')} 
-          className={`tab-link ${activeSection === 'members' ? 'active' : ''}`}
+        </button>
+        <button
+          onClick={() => setSelectedTab("Members")}
+          className={selectedTab === "Members" ? "active-tab" : "inactive-tab"}
         >
           Members
-        </div>
-      </nav>
+        </button>
+      </div>
 
       <main>
         <div className="search-container">
           <input
             type="text"
             className="search-bar"
-            placeholder={`Search ${activeSection === 'books' ? 'by title or author...' : 'by name or email...'}`}
+            placeholder={`Search ${selectedTab === "Books" ? "by title or author..." : "by name or email..."}`}
             value={searchTerm}
             onChange={handleSearch}
           />
@@ -265,7 +266,7 @@ const Home = () => {
         </div>
 
         <div className="tab-content">
-          {activeSection === 'books' ? (
+          <TabPanel hidden={selectedTab !== "Books"}>
             <>
               <h2>Available Books</h2>
               <table border="1">
@@ -282,11 +283,12 @@ const Home = () => {
                 <tbody>
                   {filteredBooks?.map((book) => (
                     <tr key={book.id}>
-                      <td>{book.title}
+                      <td>
+                        {book.title}
                         <FontAwesomeIcon
                           icon={faInfoCircle}
-                          className='details-icon'
-                          onClick={() => handleDetailsClick(book.id, 'book')}
+                          className="details-icon"
+                          onClick={() => handleDetailsClick(book.id, "book")}
                         />
                       </td>
                       <td>{book.author}</td>
@@ -305,7 +307,9 @@ const Home = () => {
                 </tbody>
               </table>
             </>
-          ) : (
+          </TabPanel>
+
+          <TabPanel hidden={selectedTab !== "Members"}>
             <>
               <h2>Members List</h2>
               <table border="1">
@@ -321,11 +325,12 @@ const Home = () => {
                 <tbody>
                   {filteredMembers?.map((member) => (
                     <tr key={member.id}>
-                      <td>{`${member.firstName} ${member.lastName}`}
+                      <td>
+                        {`${member.firstName} ${member.lastName}`}
                         <FontAwesomeIcon
                           icon={faInfoCircle}
-                          className='details-icon'
-                          onClick={() => handleDetailsClick(member.id, 'member')}
+                          className="details-icon"
+                          onClick={() => handleDetailsClick(member.id, "member")}
                         />
                       </td>
                       <td>{member.email}</td>
@@ -343,7 +348,7 @@ const Home = () => {
                 </tbody>
               </table>
             </>
-          )}
+          </TabPanel>
         </div>
       </main>
 
@@ -351,9 +356,9 @@ const Home = () => {
         <div className="modal">
           <div className="modal-content">
             <span className="close" onClick={() => setIsAddModalOpen(false)}>&times;</span>
-            <h2>{activeSection === 'books' ? 'Add Book' : 'Register Member'}</h2>
+            <h2>{selectedTab === 'books' ? 'Add Book' : 'Register Member'}</h2>
             <form>
-              {activeSection === 'books' ? (
+              {selectedTab === 'books' ? (
                 <>
                   <input
                     type="text"
