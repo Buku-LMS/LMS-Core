@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faBook } from '@fortawesome/free-solid-svg-icons'; 
+import { faPlus, faBook, faInfoCircle } from '@fortawesome/free-solid-svg-icons'; 
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
@@ -282,11 +282,16 @@ const Home = () => {
                 <tbody>
                   {filteredBooks?.map((book) => (
                     <tr key={book.id}>
-                      <td onClick={() => handleRowClick(book.id, 'book')}>{book.title}</td>
-                      <td onClick={() => handleRowClick(book.id, 'book')}>{book.author}</td>
-                      <td onClick={() => handleRowClick(book.id, 'book')}>{book.publicationYear}</td>
-                      <td onClick={() => handleRowClick(book.id, 'book')}>{book.stock}</td>
-                      <td onClick={() => handleRowClick(book.id, 'book')}>{book.rentFee}</td>
+                      <td>{book.title}
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          onClick={() => handleRowClick(book.id, 'book')}
+                        />
+                      </td>
+                      <td>{book.author}</td>
+                      <td>{book.publicationYear}</td>
+                      <td>{book.stock}</td>
+                      <td>{book.rentFee}</td>
                       <td>
                         <FontAwesomeIcon 
                           icon={faBook} 
@@ -314,8 +319,13 @@ const Home = () => {
                 </thead>
                 <tbody>
                   {filteredMembers?.map((member) => (
-                    <tr key={member.id} onClick={() => handleRowClick(member.id, 'member')}>
-                      <td>{`${member.firstName} ${member.lastName}`}</td>
+                    <tr key={member.id}>
+                      <td>{`${member.firstName} ${member.lastName}`}
+                        <FontAwesomeIcon
+                          icon={faInfoCircle}
+                          onClick={() => handleRowClick(member.id, 'member')}
+                        />
+                      </td>
                       <td>{member.email}</td>
                       <td>{member.phoneNumber}</td>
                       <td>{member.balance}</td>
