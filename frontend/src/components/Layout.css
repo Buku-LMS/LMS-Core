@@ -1,0 +1,55 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #d3d3d3; 
+  color: white;
+  padding: 5px 20px; 
+  text-align: left; 
+  z-index: 1000;
+}
+
+.header p {
+  color: rgb(65, 53, 233); 
+  cursor: pointer;
+}
+
+.main-content {
+  margin-top: 60px; 
+  margin-bottom: 60px; 
+  padding: 20px;
+  flex-grow: 1;
+  background-color: #f0f0f0; 
+  overflow-y: auto; 
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #d3d3d3; 
+  color: white;
+  text-align: center; 
+  padding: 10px 20px;
+  z-index: 1000;
+}
+
+.footer p {
+  margin: 0; 
+  color: rgb(65, 53, 233);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden; 
+}
