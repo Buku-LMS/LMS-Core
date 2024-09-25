@@ -115,7 +115,7 @@ const Home = () => {
     setSearchTerm(event.target.value.toLowerCase()); 
   };
 
-  const handleRowClick = (id, type) => {
+  const handleDetailsClick = (id, type) => {
     setSelectedItemId(id);
     setItemType(type);
     setIsDetailsModalOpen(true); 
@@ -285,7 +285,8 @@ const Home = () => {
                       <td>{book.title}
                         <FontAwesomeIcon
                           icon={faInfoCircle}
-                          onClick={() => handleRowClick(book.id, 'book')}
+                          className='details-icon'
+                          onClick={() => handleDetailsClick(book.id, 'book')}
                         />
                       </td>
                       <td>{book.author}</td>
@@ -323,7 +324,8 @@ const Home = () => {
                       <td>{`${member.firstName} ${member.lastName}`}
                         <FontAwesomeIcon
                           icon={faInfoCircle}
-                          onClick={() => handleRowClick(member.id, 'member')}
+                          className='details-icon'
+                          onClick={() => handleDetailsClick(member.id, 'member')}
                         />
                       </td>
                       <td>{member.email}</td>
