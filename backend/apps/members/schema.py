@@ -43,18 +43,28 @@ class Mutation:
         return new_member
 
     @strawberry.mutation
-    def debit_account(self, member_id: int, amount: float) -> MemberType:
+    def update_member(
+        self,
+        member_id: int,
+        first_name: str = None,
+        last_name: str = None,
+        email: str = None,
+        phone_number: str = None,
+        balance: float = None,
+    ) -> MemberType:
         member = Member.objects.get(id=member_id)
-        amount_decimal = Decimal(amount)
-        member.balance -= amount_decimal
-        member.save()
-        return member
 
-    @strawberry.mutation
-    def credit_account(self, member_id: int, amount: float) -> MemberType:
-        member = Member.objects.get(id=member_id)
-        amount_decimal = Decimal(amount)
-        member.balance += amount_decimal
+        if first_name is not None:
+            member.first_name = first_name
+        if last_name is not None:
+            member.last_name = last_name
+        if email is not None:
+            member.email = email
+        if phone_number is not None:
+            member.phone_number = phone_number
+        if balance is not None:
+            member.balance = Decimal(balance)
+
         member.save()
         return member
 

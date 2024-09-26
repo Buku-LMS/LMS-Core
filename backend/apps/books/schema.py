@@ -44,5 +44,31 @@ class Mutation:
         )
         return new_book
 
+    @strawberry.mutation
+    def update_book(
+        self,
+        info: Info,
+        book_id: int,
+        title: str = None,
+        author: str = None,
+        publication_year: int = None,
+        stock: int = None,
+        rent_fee: float = None,
+    ) -> BookType:
+        book = Book.objects.get(id=book_id)
+
+        if title is not None:
+            book.title = title
+        if author is not None:
+            book.author = author
+        if publication_year is not None:
+            book.publication_year = publication_year
+        if stock is not None:
+            book.stock = stock
+        if rent_fee is not None:
+            book.rent_fee = rent_fee
+        book.save()
+        return book
+
 
 schema = strawberry.Schema(query=Query, mutation=Mutation)
