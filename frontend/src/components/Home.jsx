@@ -417,9 +417,6 @@ const Home = () => {
                   <tr>
                     <th>Title</th>
                     <th>Author</th>
-                    <th>Publication Year</th>
-                    <th>Stock</th>
-                    <th>Rent Fee (KES)</th>
                     <th>Issue</th>
                   </tr>
                 </thead>
@@ -435,9 +432,6 @@ const Home = () => {
                         />
                       </td>
                       <td>{book.author}</td>
-                      <td>{book.publicationYear}</td>
-                      <td>{book.stock}</td>
-                      <td>{book.rentFee}</td>
                       <td>
                         <FontAwesomeIcon 
                           icon={faBook} 
@@ -459,9 +453,6 @@ const Home = () => {
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone No.</th>
-                    <th>Balance (KES)</th>
                     <th>Book Issues</th>
                   </tr>
                 </thead>
@@ -476,9 +467,6 @@ const Home = () => {
                           onClick={() => handleDetailsClick(member.id, "member")}
                         />
                       </td>
-                      <td>{member.email}</td>
-                      <td>{member.phoneNumber}</td>
-                      <td>{member.balance}</td>
                       <td>
                         <FontAwesomeIcon 
                           icon={faBook} 
@@ -511,7 +499,7 @@ const Home = () => {
                   <input
                     type="text"
                     placeholder="Title"
-                    value={title} // Use local state directly
+                    value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
                   />

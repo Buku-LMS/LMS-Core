@@ -64,7 +64,7 @@ const ReturnBook = () => {
     variables: { memberId: parseInt(memberId) },
   });
 
-  const { loading: loadingMember, error: errorMember, data: dataMember, refetch: refetchMember } = useQuery(GET_MEMBER_DETAILS, {
+  const { loading: loadingMember, error: errorMember, refetch: refetchMember } = useQuery(GET_MEMBER_DETAILS, {
     variables: { memberId: parseInt(memberId) },
   });
 
@@ -103,13 +103,10 @@ const ReturnBook = () => {
   return (
     <div className="transaction-page">
       <h2>Books Issued to Member</h2>
-      <h3>Member Balance: KES {dataMember.getMember.balance.toFixed(2)}</h3>
       <table>
         <thead>
           <tr>
             <th>Title</th>
-            <th>Author</th>
-            <th>Publication Year</th>
             <th>Issue Date</th>
             <th>Return</th>
           </tr>
@@ -118,8 +115,6 @@ const ReturnBook = () => {
           {dataBooks.issuedBooks.map((transaction) => (
             <tr key={transaction.id}>
               <td>{transaction.book.title}</td>
-              <td>{transaction.book.author}</td>
-              <td>{transaction.book.publicationYear}</td>
               <td>{new Date(transaction.issueDate).toLocaleDateString()}</td>
               <td>
                 <FontAwesomeIcon 
