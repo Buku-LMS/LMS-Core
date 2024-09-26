@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import { useTabs, TabPanel } from "react-headless-tabs";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -86,6 +86,61 @@ const GET_MEMBER_DETAILS = gql`
   }
 `;
 
+const UPDATE_BOOK = gql`
+  mutation updateBook(
+    $bookId: Int!,
+    $title: String!,
+    $author: String!,
+    $publicationYear: Int!,
+    $rentFee: Float!,
+    $stock: Int!
+  ) {
+    updateBook(
+      bookId: $bookId,
+      title: $title,
+      author: $author,
+      publicationYear: $publicationYear,
+      rentFee: $rentFee,
+      stock: $stock
+    ) {
+      author
+      rentFee
+      stock
+      title
+      publicationYear
+      isbn
+      id
+    }
+  }
+`;
+
+const UPDATE_MEMBER = gql`
+  mutation updateMember(
+    $memberId: Int!,
+    $firstName: String!,
+    $lastName: String!,
+    $email: String!,
+    $phoneNumber: String!,
+    $balance: Float!
+  ) {
+    updateMember(
+      memberId: $memberId,
+      firstName: $firstName,
+      lastName: $lastName,
+      email: $email,
+      phoneNumber: $phoneNumber,
+      balance: $balance
+    ) {
+      phoneNumber
+      lastName
+      id
+      firstName
+      email
+      balance
+    }
+  }
+`;
+
 const Home = () => {
   const [selectedTab, setSelectedTab] = useTabs(["Books", "Members"], "Books");
   const { loading: loadingBooks, error: errorBooks, data: dataBooks } = useQuery(GET_ALL_BOOKS);
@@ -111,6 +166,33 @@ const Home = () => {
   const [balance, setBalance] = useState('');
 
   const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState(null);
+
+  const [updateBookMutation] = useMutation(UPDATE_BOOK);
+  const [updateMemberMutation] = useMutation(UPDATE_MEMBER);
+
+  useEffect(() => {
+    if (editData && itemType === 'book') {
+      setTitle(editData.title || '');
+      setAuthor(editData.author || '');
+      setPublicationYear(editData.publicationYear ? editData.publicationYear.toString() : ''); 
+      setRentFee(editData.rentFee ? editData.rentFee.toString() : ''); 
+      setStock(editData.stock ? editData.stock.toString() : ''); 
+    }
+  }, [editData, itemType]);
+  
+  useEffect(() => {
+    if (editData && itemType === 'member') {
+      setFirstName(editData.firstName || '');
+      setLastName(editData.lastName || '');
+      setEmail(editData.email || '');
+      setPhoneNumber(editData.phoneNumber || '');
+      setBalance(editData.balance ? editData.balance.toString() : ''); 
+    }
+  }, [editData, itemType]);
+
+
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value.toLowerCase()); 
@@ -146,7 +228,7 @@ const Home = () => {
     refetchQueries: [{ query: GET_ALL_BOOKS }],
     onError: (error) => {
       console.error("Error adding book:", error);
-      alert("Failed to add book. Please try again."); // Display error
+      alert("Failed to add book. Please try again.");
     },
   });
 
@@ -158,7 +240,7 @@ const Home = () => {
     refetchQueries: [{ query: GET_ALL_MEMBERS }],
     onError: (error) => {
       console.error("Error registering member:", error);
-      alert("Failed to register member. Please try again."); // Display error
+      alert("Failed to register member. Please try again.");
     },
   });
 
@@ -192,7 +274,7 @@ const Home = () => {
         },
       });
     } else {
-      alert("Please fill all required fields."); // Alert user
+      alert("Please fill all required fields."); 
     }
   };
 
@@ -208,12 +290,73 @@ const Home = () => {
         },
       });
     } else {
-      alert("Please fill all required fields."); // Alert user
+      alert("Please fill all required fields.");
     }
   };
 
   const handleBookIssue = (id) => {
     navigate(`/book-transactions/${id}`);
+  };
+
+  const handleEditClick = (item) => {
+    setIsEditing(true);
+    setEditData(item); 
+    setIsDetailsModalOpen(false); 
+    setIsAddModalOpen(true); 
+  };
+
+  const handleUpdateBook = async () => {
+    try {
+      const bookId = parseInt(editData.id); 
+      const publicationYearInt = parseInt(publicationYear); 
+      const stockInt = parseInt(stock);
+  
+      if (isNaN(bookId) || isNaN(publicationYearInt) || isNaN(stockInt)) {
+        throw new Error('Invalid input: Ensure all fields are filled correctly.');
+      }
+  
+      await updateBookMutation({
+        variables: {
+          bookId,
+          title,
+          author,
+          publicationYear: publicationYearInt,
+          rentFee: parseFloat(rentFee), 
+          stock: stockInt 
+        },
+      });
+  
+      setIsAddModalOpen(false); 
+    } catch (error) {
+      console.error('Error updating book:', error);
+    }
+  };
+  
+
+  const handleUpdateMember = async () => {
+    try {
+      const memberId = parseInt(editData.id);
+      const balanceFloat = parseFloat(balance); 
+
+      if (isNaN(memberId) || isNaN(balanceFloat)) {
+        throw new Error('Invalid input: Ensure all fields are filled correctly.');
+      }
+
+      await updateMemberMutation({
+        variables: {
+          memberId,
+          firstName,
+          lastName,
+          email,
+          phoneNumber,
+          balance: balanceFloat,
+        },
+      });
+
+      setIsAddModalOpen(false); 
+    } catch (error) {
+      console.error('Error updating member:', error);
+    }
   };
 
   const { loading: loadingBookDetails, error: errorBookDetails, data: dataBook } = useQuery(GET_BOOK_DETAILS, {
@@ -352,38 +495,42 @@ const Home = () => {
         </div>
       </main>
 
+
       {isAddModalOpen && (
         <div className="modal">
           <div className="modal-content">
             <span className="close" onClick={() => setIsAddModalOpen(false)}>&times;</span>
-            <h2>{selectedTab === 'Books' ? 'Add Book' : 'Register Member'}</h2>
+            <h2>
+              {isEditing 
+                ? (selectedTab === 'Books' ? 'Edit Book' : 'Edit Member') 
+                : (selectedTab === 'Books' ? 'Add Book' : 'Register Member')}
+            </h2>
             <form>
-              {selectedTab === 'books' ? (
+              {selectedTab === 'Books' ? (
                 <>
                   <input
                     type="text"
                     placeholder="Title"
-                    value={title}
+                    value={title} // Use local state directly
                     onChange={(e) => setTitle(e.target.value)}
                     required
                   />
                   <input
                     type="text"
                     placeholder="Author"
-                    value={author}
+                    value={author} 
                     onChange={(e) => setAuthor(e.target.value)}
                     required
                   />
                   <input
                     type="text"
                     placeholder="ISBN"
-                    value={isbn}
+                    value={isbn} 
                     onChange={(e) => setIsbn(e.target.value)}
                     required
                   />
-                  
                   <select
-                    value={publicationYear}
+                    value={publicationYear} 
                     onChange={(e) => setPublicationYear(e.target.value)}
                     required
                   >
@@ -401,19 +548,23 @@ const Home = () => {
                     type="number"
                     step="0.01"
                     placeholder="Rent Fee"
-                    value={rentFee}
+                    value={rentFee} 
                     onChange={(e) => setRentFee(e.target.value)}
                     required
                   />
                   <input
                     type="number"
                     placeholder="Stock"
-                    value={stock}
+                    value={stock} 
                     onChange={(e) => setStock(e.target.value)}
                     required
                   />
-                  <button type="button" onClick={handleAddBook} disabled={loadingBook}>
-                    {loadingBook ? 'Adding...' : 'Add Book'}
+                  <button
+                    type="button"
+                    onClick={isEditing ? handleUpdateBook : handleAddBook}
+                    disabled={loadingBook}
+                  >
+                    {loadingBook ? (isEditing ? 'Updating...' : 'Adding...') : (isEditing ? 'Update Book' : 'Add Book')}
                   </button>
                 </>
               ) : (
@@ -421,28 +572,28 @@ const Home = () => {
                   <input
                     type="text"
                     placeholder="First Name"
-                    value={firstName}
+                    value={firstName} 
                     onChange={(e) => setFirstName(e.target.value)}
                     required
                   />
                   <input
                     type="text"
                     placeholder="Last Name"
-                    value={lastName}
+                    value={lastName} 
                     onChange={(e) => setLastName(e.target.value)}
                     required
                   />
                   <input
                     type="email"
                     placeholder="Email"
-                    value={email}
+                    value={email} 
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                   <input
                     type="text"
                     placeholder="Phone Number"
-                    value={phoneNumber}
+                    value={phoneNumber} 
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     required
                   />
@@ -450,12 +601,16 @@ const Home = () => {
                     type="number"
                     step="0.01"
                     placeholder="Initial Balance"
-                    value={balance}
+                    value={balance} 
                     onChange={(e) => setBalance(e.target.value)}
                     required
                   />
-                  <button type="button" onClick={handleRegisterMember} disabled={loadingMember}>
-                    {loadingMember ? 'Registering...' : 'Register Member'}
+                  <button
+                    type="button"
+                    onClick={isEditing ? handleUpdateMember : handleRegisterMember}
+                    disabled={loadingMember}
+                  >
+                    {loadingMember ? (isEditing ? 'Updating...' : 'Registering...') : (isEditing ? 'Update Member' : 'Register Member')}
                   </button>
                 </>
               )}
@@ -463,6 +618,7 @@ const Home = () => {
           </div>
         </div>
       )}
+
 
       {isDetailsModalOpen && (
         <div className="modal">
@@ -484,6 +640,7 @@ const Home = () => {
                     <p><strong>Rent Fee:</strong> KES {dataBook.getBook.rentFee}</p>
                     <FontAwesomeIcon 
                       icon={faEdit}
+                      onClick={() => handleEditClick(dataBook.getBook)} 
                     />
                   </div>
                 )}
@@ -502,6 +659,7 @@ const Home = () => {
                     <p><strong>Balance:</strong> KES {dataMember.getMember.balance}</p>
                     <FontAwesomeIcon 
                       icon={faEdit}
+                      onClick={() => handleEditClick(dataMember.getMember)} 
                     />
                   </div>
                 )}
@@ -510,6 +668,7 @@ const Home = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
