@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import { useTabs, TabPanel } from "react-headless-tabs";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faBook, faInfoCircle } from '@fortawesome/free-solid-svg-icons'; 
+import { faPlus, faBook, faInfoCircle, faEdit } from '@fortawesome/free-solid-svg-icons'; 
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
@@ -356,7 +356,7 @@ const Home = () => {
         <div className="modal">
           <div className="modal-content">
             <span className="close" onClick={() => setIsAddModalOpen(false)}>&times;</span>
-            <h2>{selectedTab === 'books' ? 'Add Book' : 'Register Member'}</h2>
+            <h2>{selectedTab === 'Books' ? 'Add Book' : 'Register Member'}</h2>
             <form>
               {selectedTab === 'books' ? (
                 <>
@@ -482,6 +482,9 @@ const Home = () => {
                     <p><strong>Publication Year:</strong> {dataBook.getBook.publicationYear}</p>
                     <p><strong>Stock:</strong> {dataBook.getBook.stock}</p>
                     <p><strong>Rent Fee:</strong> KES {dataBook.getBook.rentFee}</p>
+                    <FontAwesomeIcon 
+                      icon={faEdit}
+                    />
                   </div>
                 )}
               </>
@@ -497,6 +500,9 @@ const Home = () => {
                     <p><strong>Email:</strong> {dataMember.getMember.email}</p>
                     <p><strong>Phone Number:</strong> {dataMember.getMember.phoneNumber}</p>
                     <p><strong>Balance:</strong> KES {dataMember.getMember.balance}</p>
+                    <FontAwesomeIcon 
+                      icon={faEdit}
+                    />
                   </div>
                 )}
               </>
