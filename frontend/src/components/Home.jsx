@@ -151,6 +151,8 @@ const Home = () => {
   const [selectedItemId, setSelectedItemId] = useState(null); 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); 
   const [itemType, setItemType] = useState(null); 
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -224,6 +226,8 @@ const Home = () => {
     onCompleted: () => {
       setIsAddModalOpen(false);
       resetBookFields();
+      setSuccessMessage('Book added successfully!'); // Set success message
+      setSuccessModalOpen(true); // Show success modal
     },
     refetchQueries: [{ query: GET_ALL_BOOKS }],
     onError: (error) => {
@@ -236,6 +240,8 @@ const Home = () => {
     onCompleted: () => {
       setIsAddModalOpen(false);
       resetMemberFields();
+      setSuccessMessage('Member registered successfully!'); // Set success message
+      setSuccessModalOpen(true); // Show success modal
     },
     refetchQueries: [{ query: GET_ALL_MEMBERS }],
     onError: (error) => {
@@ -603,6 +609,17 @@ const Home = () => {
                 </>
               )}
             </form>
+          </div>
+        </div>
+      )}
+
+      {successModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setSuccessModalOpen(false)}>&times;</span>
+            <h2>Success</h2>
+            <p>{successMessage}</p>
+            <button onClick={() => setSuccessModalOpen(false)}>OK</button>
           </div>
         </div>
       )}
