@@ -101,15 +101,7 @@ The application provides feedback for both successful and failed book returns.
 
 ## Technologies Used
 
-- **Frontend**: React, Apollo Client, CSS
-- **Backend**: Node.js, Express, GraphQL
+- **Frontend**: JavaScript(React), Apollo Client, CSS
+- **Backend**: Python(Django), Express, GraphQL
 - **Database**: MongoDB
 - **Others**: Font Awesome for icons, React Router for navigation
-
-## Contributing
-
-Contributions are welcome! To contribute, please fork the repository and create a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
