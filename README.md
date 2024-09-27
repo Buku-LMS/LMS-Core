@@ -101,7 +101,7 @@ Librarians can manage book returns through the "Return Book" section. This featu
 
 ### Return Confirmation
 
-After successfully returning a book, a confirmation message is displayed to the librarian.
+Before returning a book, a confirmation message is displayed to the librarian.
 
 ![Return Confirmation](https://github.com/maritimezra/Library-Management-System/blob/c95b93c5212b51af277af4444fdef39164c23598/images/Return%20Confirmation.png)
 *Confirmation message before book return.*
