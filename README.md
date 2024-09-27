@@ -72,6 +72,13 @@ Librarians can issue books to members through the "Issue Book" section. This pro
 ![Issue Book](https://github.com/maritimezra/Library-Management-System/blob/b173e1a587c4772efa66115e84cd4dca71e49158/images/Issue%20Book.png)
 *Issuing a book to a member.*
 
+### Issue Confirmation
+
+Before a book is issued, a confirmation message is displayed to the librarian.
+
+![Issue Confirmation](https://github.com/maritimezra/Library-Management-System/blob/c95b93c5212b51af277af4444fdef39164c23598/images/IssueConfirmation.png)
+*Confirmation message before book issuance.*
+
 ### Issue Book Success/Failed Cases
 
 The application handles both successful and failed book issuance cases, providing appropriate feedback to the user.
@@ -88,6 +95,13 @@ Librarians can manage book returns through the "Return Book" section. This featu
 
 ![Return Book](https://github.com/maritimezra/Library-Management-System/blob/b173e1a587c4772efa66115e84cd4dca71e49158/images/Book%20Issues.png)
 *Returning a book to the library.*
+
+### Return Confirmation
+
+After successfully returning a book, a confirmation message is displayed to the librarian.
+
+![Return Confirmation](https://github.com/maritimezra/Library-Management-System/blob/c95b93c5212b51af277af4444fdef39164c23598/images/Return%20Confirmation.png)
+*Confirmation message before book return.*
 
 ### Return Book Success/Failed Cases
 
