@@ -119,6 +119,6 @@ The application provides feedback for both successful and failed book returns.
 ## Technologies Used
 
 - **Frontend**: JavaScript(React), Apollo Client, CSS
-- **Backend**: Python(Django), GraphQL, SQLite3
-- **Database**: MongoDB
-- **Others**: Font Awesome for icons, React Router for navigation
+- **Backend**: Python(Django)
+- **API**: GrphQL
+- **Database**: SQLite3
