@@ -120,5 +120,5 @@ The application provides feedback for both successful and failed book returns.
 
 - **Frontend**: JavaScript(React), Apollo Client, CSS
 - **Backend**: Python(Django)
-- **API**: GrphQL
+- **API**: GraphQL
 - **Database**: SQLite3
