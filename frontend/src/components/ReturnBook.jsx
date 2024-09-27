@@ -1,5 +1,5 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
@@ -60,6 +60,7 @@ const RETURN_BOOK_MUTATION = gql`
 
 const ReturnBook = () => {
   const { memberId } = useParams();
+  const navigate = useNavigate();
   const { loading: loadingBooks, error: errorBooks, data: dataBooks, refetch: refetchBooks } = useQuery(ISSUED_BOOKS, {
     variables: { memberId: parseInt(memberId) },
   });
@@ -68,11 +69,14 @@ const ReturnBook = () => {
     variables: { memberId: parseInt(memberId) },
   });
 
-  const [showModal, setShowModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [returnSuccess, setReturnSuccess] = useState(null); 
+
   const [returnBook] = useMutation(RETURN_BOOK_MUTATION, {
     onCompleted: () => {
-      setShowModal(false);
+      setShowConfirmModal(false);
+      setReturnSuccess(true)
       refetchBooks();
       refetchMember();
     },
@@ -88,7 +92,7 @@ const ReturnBook = () => {
 
   const handleReturnClick = (transaction) => {
     setSelectedTransaction(transaction);
-    setShowModal(true);
+    setShowConfirmModal(true);
   };
 
   const handleReturnBook = () => {
@@ -128,14 +132,27 @@ const ReturnBook = () => {
         </tbody>
       </table>
 
-      {showModal && (
+      {showConfirmModal && (
         <div className="modal">
           <div className="modal-content">
             <h3>Return Book</h3>
             <p>Are you sure you want to return the book: <strong>{selectedTransaction?.book.title}</strong>?</p>
             <p>{selectedTransaction?.member.firstName} {selectedTransaction?.member.lastName} will be charged KES {selectedTransaction?.fee.toFixed(2)}</p>
             <button onClick={handleReturnBook}>Confirm Return</button>
-            <button onClick={() => setShowModal(false)}>Cancel</button>
+            <button onClick={() => setShowConfirmModal(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {returnSuccess !== null && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>{returnSuccess ? 'Book Return Successfully' : 'Book return Failed'}</h3>
+            <p>{returnSuccess ? 'The book has been successfully returned.' : 'Book return failed.'}</p>
+            <button onClick={() => {
+              setReturnSuccess(null);
+              navigate('/'); 
+            }} className="confirm-btn">OK</button>
           </div>
         </div>
       )}

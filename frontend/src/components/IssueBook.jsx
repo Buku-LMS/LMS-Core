@@ -64,7 +64,7 @@ const IssueBook = () => {
   const [selectedMemberId, setSelectedMemberId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [issueSuccess, setIssueSuccess] = useState(null); // State to track issue result
+  const [issueSuccess, setIssueSuccess] = useState(null); 
   const navigate = useNavigate();
 
   const parsedBookId = bookId ? parseInt(bookId, 10) : null;
@@ -79,13 +79,13 @@ const IssueBook = () => {
   const [issueBook, { loading: loadingIssue }] = useMutation(ISSUE_BOOK, {
     onCompleted: (data) => {
       if (data.issueBook.book.stock > 0) {
-        setIssueSuccess(true); // Successful issue
+        setIssueSuccess(true); 
       } else {
-        setIssueSuccess(false); // Book out of stock
+        setIssueSuccess(false); 
       }
     },
     onError: () => {
-      setIssueSuccess(false); // Handle error case
+      setIssueSuccess(false); 
     },
     refetchQueries: [{ query: GET_ALL_BOOKS }]
   });
@@ -98,7 +98,7 @@ const IssueBook = () => {
     issueBook({
       variables: { bookId: parsedBookId, memberId: parseInt(selectedMemberId, 10) },
     });
-    setShowConfirmModal(false); // Close the modal after issuing the book
+    setShowConfirmModal(false); 
   };
 
   const handleCancel = () => {
@@ -177,8 +177,8 @@ const IssueBook = () => {
             <h3>{issueSuccess ? 'Book Issued Successfully' : 'Issue Failed'}</h3>
             <p>{issueSuccess ? 'The book has been successfully issued.' : 'The book is out of stock.'}</p>
             <button onClick={() => {
-              setIssueSuccess(null); // Reset state
-              navigate('/'); // Navigate back or close modal
+              setIssueSuccess(null);
+              navigate('/'); 
             }} className="confirm-btn">OK</button>
           </div>
         </div>
