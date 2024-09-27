@@ -1,6 +1,6 @@
 # Library Management System
 
-A comprehensive Library Management System designed for librarians to efficiently manage books and members. This application provides features for adding books, registering members, issuing and returning books, and viewing detailed information about both books and members.
+A comprehensive Library Management System designed to manage books and members efficiently. This application provides features for adding books, registering members, issuing and returning books, and updating or viewing detailed information about books and members
 
 ## Table of Contents
 - [Homepage](#homepage)
@@ -20,7 +20,7 @@ A comprehensive Library Management System designed for librarians to efficiently
 
 ## Homepage
 
-On the homepage, librarians can easily access the main functionalities of the application. The interface displays a summary of available books and registered members, allowing for quick navigation to different sections.
+On the homepage, librarians can easily access the main functionalities of the application. The interface displays a summary of available books and registered members, allowing quick navigation to different sections.
 
 ![Homepage](https://github.com/maritimezra/Library-Management-System/blob/b173e1a587c4772efa66115e84cd4dca71e49158/images/Homepage.png)
 *The homepage provides access to books and members.*
