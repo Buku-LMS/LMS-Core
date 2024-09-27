@@ -80,7 +80,7 @@ The application handles both successful and failed book issuance cases, providin
 *Success message after issuing a book.*
 
 ![Issue Failed](https://github.com/maritimezra/Library-Management-System/blob/b173e1a587c4772efa66115e84cd4dca71e49158/images/Issue%20Failed.png)
-*Error message if the book issuance fails.*
+*Error message if the book issuance fails for being out of stock.*
 
 ## Return Book
 
@@ -97,7 +97,7 @@ The application provides feedback for both successful and failed book returns.
 *Success message after returning a book.*
 
 ![Return Failed](https://github.com/maritimezra/Library-Management-System/blob/b173e1a587c4772efa66115e84cd4dca71e49158/images/Return%20Failed.png)
-*Error message if the book return fails.*
+*Error message if the book return fails due to member exceeding allowed debt(KES500).*
 
 ## Technologies Used
 
