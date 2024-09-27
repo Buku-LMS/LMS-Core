@@ -11,8 +11,10 @@ A comprehensive Library Management System designed for librarians to efficiently
 - [Member Details](#member-details)
 - [Update Member](#update-member)
 - [Issue Book](#issue-book)
+- [Issue Confirmation](#issue-confirmation)
 - [Issue Book Success/Failed Cases](#issue-book-successfailed-cases)
 - [Return Book](#return-book)
+- [Return Confirmation](#return-confirmation)
 - [Return Book Success/Failed Cases](#return-book-successfailed-cases)
 - [Technologies Used](#technologies-used)
 
